@@ -1,0 +1,57 @@
+假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+
+( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。
+
+搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+
+你可以假设数组中不存在重复的元素。
+
+你的算法时间复杂度必须是 O(log n) 级别。
+
+示例 1:
+
+输入: nums = [4,5,6,7,0,1,2], target = 0
+输出: 4
+示例 2:
+
+输入: nums = [4,5,6,7,0,1,2], target = 3
+输出: -1
+
+解题思路：因为数组旋转之后前一段和后一段都是局部有序的，所以我们先用一次二分找出数组中的最小值，然后通过将数组的最后一位与目标值比较，如果
+最后一位的值大于目标值，则在后一段中再进行一次二分，反之在前一段再进行一次二分，最后判断得出来的值是否与目标值相等。
+
+
+代码：
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        if (nums.empty())
+            return -1;
+        int l = 0, r = nums.size() - 1;
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if (nums[mid] <= nums.back())
+                r = mid;
+            else
+                l = mid + 1;     
+        }  //先找出最小值
+        if(target <= nums.back())
+            r = nums.size() - 1;
+        else
+            l = 0,r--;
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target)
+               r = mid;
+            else 
+               l = mid + 1;
+        }
+        if(nums[l] == target)
+            return l;
+        return -1;
+        
+    }
+};
